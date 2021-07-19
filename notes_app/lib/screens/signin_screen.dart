@@ -54,9 +54,13 @@ class _SignInScreenState extends State<SignInScreen> {
                 style: TextStyle(color: Colors.black, fontSize: 16),
               ),
               SizedBox(height: 15),
-              textItem(context, labelText: 'Enter Email'),
+              textItem(context,
+                  labelText: 'Enter Email', controller: _emailController),
               SizedBox(height: 15),
-              textItem(context, labelText: 'Enter Password'),
+              textItem(context,
+                  labelText: 'Enter Password',
+                  controller: _passwordController,
+                  obscureText: true),
               SizedBox(height: 30),
               colorButton(),
               SizedBox(height: 15),
@@ -142,11 +146,17 @@ class _SignInScreenState extends State<SignInScreen> {
           borderRadius: BorderRadius.circular(15),
         ),
         child: Center(
-          child: Text(
-            "Sign In".toUpperCase(),
-            style: TextStyle(
-                color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-          ),
+          child: isLoading
+              ? CircularProgressIndicator(
+                  backgroundColor: Colors.white,
+                )
+              : Text(
+                  "Sign In".toUpperCase(),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
         ),
       ),
     );
@@ -185,11 +195,14 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Widget textItem(BuildContext context,
-      {String labelText, bool obscureText = false}) {
+      {String labelText,
+      bool obscureText = false,
+      TextEditingController controller}) {
     return Container(
       width: MediaQuery.of(context).size.width - 85,
       height: 55,
       child: TextFormField(
+        controller: controller,
         obscureText: obscureText,
         decoration: InputDecoration(
           labelText: labelText,
