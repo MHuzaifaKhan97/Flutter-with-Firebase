@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:notes_app/screens/home_screen.dart';
+import 'package:notes_app/screens/signup_screen.dart';
+import 'package:notes_app/services/auth_service.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -15,6 +17,8 @@ class _SignInScreenState extends State<SignInScreen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   var isLoading = false;
+
+  AuthClass _authClass = AuthClass();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,12 +38,18 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
               ),
               SizedBox(height: 20),
-              buttonWidget(
-                context,
-                path: 'assets/google.svg',
-                name: 'Continue with Google',
-                size: 25,
-              ),
+              buttonWidget(context,
+                  path: 'assets/google.svg',
+                  name: 'Continue with Google',
+                  size: 25, onTap: () async {
+                setState(() {
+                  isLoading = true;
+                });
+                await _authClass.googleSignIn(context);
+                setState(() {
+                  isLoading = false;
+                });
+              }),
               SizedBox(height: 15),
               buttonWidget(
                 context,
@@ -72,9 +82,19 @@ class _SignInScreenState extends State<SignInScreen> {
                     style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(width: 8),
-                  Text(
-                    'SignUp',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (builder) => SignUpScreen()),
+                          (route) => false);
+                    },
+                    child: Text(
+                      'SignUp',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
                   )
                 ],
               ),
@@ -163,35 +183,46 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Widget buttonWidget(BuildContext context,
-      {String path, String name, double size, bool invert = false}) {
-    return Container(
-        width: MediaQuery.of(context).size.width - 80,
-        height: 60,
-        child: Card(
-          color: invert ? Colors.white : Colors.black,
-          elevation: 8,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-              side: BorderSide(color: Colors.grey, width: 2)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgPicture.asset(
-                path,
-                height: size,
-                width: size,
-              ),
-              SizedBox(width: 8),
-              Text(
-                name,
-                style: TextStyle(
-                    color: invert ? Colors.black : Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold),
-              )
-            ],
-          ),
-        ));
+      {String path,
+      String name,
+      double size,
+      bool invert = false,
+      Function onTap}) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+          width: MediaQuery.of(context).size.width - 80,
+          height: 60,
+          child: Card(
+            color: invert ? Colors.white : Colors.black,
+            elevation: 8,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+                side: BorderSide(color: Colors.grey, width: 2)),
+            child: isLoading
+                ? CircularProgressIndicator(
+                    backgroundColor: Colors.white,
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        path,
+                        height: size,
+                        width: size,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        name,
+                        style: TextStyle(
+                            color: invert ? Colors.black : Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  ),
+          )),
+    );
   }
 
   Widget textItem(BuildContext context,
