@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:notes_app/screens/home_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -106,7 +107,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     password: _passwordController.text);
             print(userCredential);
             if (userCredential?.user?.email != null) {
-              showDialog(
+              await showDialog(
                 context: context,
                 builder: (_) => AlertDialog(
                   backgroundColor: Colors.black,
@@ -132,6 +133,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
               this.setState(() {
                 isLoading = false;
               });
+              _emailController.text = "";
+              _passwordController.text = "";
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (builder) => HomeScreen()),
+                  (route) => false);
             }
           }
         } catch (e) {

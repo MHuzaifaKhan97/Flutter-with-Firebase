@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:notes_app/screens/home_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -8,6 +10,11 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  firebase_auth.FirebaseAuth firebaseAuth = firebase_auth.FirebaseAuth.instance;
+
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  var isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,25 +87,66 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Widget colorButton() {
-    return Container(
-      width: MediaQuery.of(context).size.width - 90,
-      height: 60,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [
-          Color(0xff000000),
-          Color(0xff4a4747),
-          Color(0xff000000),
-          Color(0xff000000),
-          Color(0xff4a4747),
-          Color(0xff000000),
-        ]),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Center(
-        child: Text(
-          "Sign In".toUpperCase(),
-          style: TextStyle(
-              color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+    return InkWell(
+      onTap: () async {
+        this.setState(() {
+          isLoading = true;
+        });
+        try {
+          if (_emailController.text == "") {
+            final emailSnackBar =
+                SnackBar(content: Text('Please enter your email address'));
+            ScaffoldMessenger.of(context).showSnackBar(emailSnackBar);
+          } else if (_passwordController.text == "") {
+            final passwordSnackBar =
+                SnackBar(content: Text('Please enter your phone number'));
+            ScaffoldMessenger.of(context).showSnackBar(passwordSnackBar);
+          } else {
+            UserCredential userCredential =
+                await firebaseAuth.signInWithEmailAndPassword(
+                    email: _emailController.text.trim(),
+                    password: _passwordController.text);
+            print(userCredential);
+            if (userCredential?.user?.email != null) {
+              this.setState(() {
+                isLoading = false;
+              });
+              _emailController.text = "";
+              _passwordController.text = "";
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (builder) => HomeScreen()),
+                  (route) => false);
+            }
+          }
+        } catch (e) {
+          final snackbar = SnackBar(content: Text(e?.message.toString()));
+          ScaffoldMessenger.of(context).showSnackBar(snackbar);
+          this.setState(() {
+            isLoading = false;
+          });
+        }
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width - 90,
+        height: 60,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(colors: [
+            Color(0xff000000),
+            Color(0xff4a4747),
+            Color(0xff000000),
+            Color(0xff000000),
+            Color(0xff4a4747),
+            Color(0xff000000),
+          ]),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Center(
+          child: Text(
+            "Sign In".toUpperCase(),
+            style: TextStyle(
+                color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+          ),
         ),
       ),
     );
