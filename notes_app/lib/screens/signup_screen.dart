@@ -13,6 +13,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  var isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,6 +87,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget colorButton() {
     return InkWell(
       onTap: () async {
+        this.setState(() {
+          isLoading = true;
+        });
         try {
           if (_emailController.text == "") {
             final emailSnackBar =
@@ -125,11 +129,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ],
                 ),
               );
+              this.setState(() {
+                isLoading = false;
+              });
             }
           }
         } catch (e) {
           final snackbar = SnackBar(content: Text(e?.message.toString()));
           ScaffoldMessenger.of(context).showSnackBar(snackbar);
+          this.setState(() {
+            isLoading = false;
+          });
         }
       },
       child: Container(
@@ -147,11 +157,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
           borderRadius: BorderRadius.circular(15),
         ),
         child: Center(
-          child: Text(
-            "Sign Up".toUpperCase(),
-            style: TextStyle(
-                color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-          ),
+          child: isLoading
+              ? CircularProgressIndicator(
+                  backgroundColor: Colors.white,
+                )
+              : Text(
+                  "Sign Up".toUpperCase(),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
         ),
       ),
     );
