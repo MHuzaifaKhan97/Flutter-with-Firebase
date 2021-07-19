@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -135,21 +136,30 @@ class _SignInScreenState extends State<SignInScreen> {
         ));
   }
 
-  Widget textItem(BuildContext context, {String labelText}) {
+  Widget textItem(BuildContext context,
+      {String labelText, bool obscureText = false}) {
     return Container(
       width: MediaQuery.of(context).size.width - 85,
       height: 55,
       child: TextFormField(
+        obscureText: obscureText,
         decoration: InputDecoration(
-            labelText: labelText,
-            labelStyle: TextStyle(
-              fontSize: 18,
-              color: Colors.black,
-            ),
-            enabledBorder: OutlineInputBorder(
+          labelText: labelText,
+          labelStyle: TextStyle(
+            fontSize: 18,
+            color: Colors.black,
+          ),
+          border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15),
-              borderSide: BorderSide(color: Colors.grey, width: 2),
-            )),
+              borderSide: BorderSide(color: Colors.grey, width: 2)),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide(color: Colors.grey, width: 2),
+          ),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+              borderSide: BorderSide(color: Colors.grey, width: 2)),
+        ),
       ),
     );
   }
