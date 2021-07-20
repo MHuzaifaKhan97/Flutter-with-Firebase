@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:notes_app/screens/home_screen.dart';
+import 'package:notes_app/screens/phone_auth_screen.dart';
 import 'package:notes_app/screens/signin_screen.dart';
 import 'package:notes_app/services/auth_service.dart';
 
@@ -47,13 +48,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 await _authClass.googleSignIn(context);
               }),
               SizedBox(height: 15),
-              buttonWidget(
-                context,
-                path: 'assets/phone.svg',
-                name: 'Continue with Phone',
-                size: 30,
-                invert: true,
-              ),
+              buttonWidget(context,
+                  path: 'assets/phone.svg',
+                  name: 'Continue with Phone',
+                  size: 30,
+                  invert: true, onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (builder) => PhoneAuthScreen()));
+              }),
               SizedBox(height: 15),
               Text(
                 'OR',
