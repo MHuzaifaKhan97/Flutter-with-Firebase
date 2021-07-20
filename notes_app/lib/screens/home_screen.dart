@@ -18,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
               icon: Icon(Icons.logout),
               onPressed: () async {
-                await _authClass.logout();
+                await _authClass.logout(context);
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (builder) => SignInScreen()),

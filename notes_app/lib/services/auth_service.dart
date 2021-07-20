@@ -58,12 +58,15 @@ class AuthClass {
     return await storage.read(key: 'token');
   }
 
-  Future<void> logout() async {
+  Future<void> logout(BuildContext context) async {
     try {
       await _googleSignIn.signOut();
       await auth.signOut();
       await storage.delete(key: 'token');
       await storage.delete(key: 'userCredential');
-    } catch (e) {}
+    } catch (e) {
+      final snackbar = SnackBar(content: Text(e?.message.toString()));
+      ScaffoldMessenger.of(context).showSnackBar(snackbar);
+    }
   }
 }
