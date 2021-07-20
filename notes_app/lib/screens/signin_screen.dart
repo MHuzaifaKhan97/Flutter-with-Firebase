@@ -131,6 +131,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     email: _emailController.text.trim(),
                     password: _passwordController.text);
             print(userCredential);
+            _authClass.storeTokenAndData(userCredential);
             if (userCredential?.user?.email != null) {
               this.setState(() {
                 isLoading = false;
@@ -199,28 +200,24 @@ class _SignInScreenState extends State<SignInScreen> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
                 side: BorderSide(color: Colors.grey, width: 2)),
-            child: isLoading
-                ? CircularProgressIndicator(
-                    backgroundColor: Colors.white,
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        path,
-                        height: size,
-                        width: size,
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        name,
-                        style: TextStyle(
-                            color: invert ? Colors.black : Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold),
-                      )
-                    ],
-                  ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  path,
+                  height: size,
+                  width: size,
+                ),
+                SizedBox(width: 8),
+                Text(
+                  name,
+                  style: TextStyle(
+                      color: invert ? Colors.black : Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
+                )
+              ],
+            ),
           )),
     );
   }
