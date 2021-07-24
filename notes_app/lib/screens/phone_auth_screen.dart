@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:notes_app/services/auth_service.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +15,10 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
   int start = 30;
   bool wait = false;
   String buttonName = "Send";
+  TextEditingController phoneController = TextEditingController();
+  String verificationIDFinal = "";
+  String smsCode = "";
+  AuthClass _authClass = AuthClass();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,7 +88,10 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
               ])),
               SizedBox(height: 80),
               InkWell(
-                onTap: () {},
+                onTap: () async {
+                  await _authClass.signInWithPhoneNumber(
+                      verificationIDFinal, smsCode, context);
+                },
                 child: Container(
                   height: 60,
                   width: MediaQuery.of(context).size.width - 60,
@@ -139,6 +147,9 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
       fieldStyle: FieldStyle.underline,
       onCompleted: (pin) {
         print("Completed: " + pin);
+        setState(() {
+          smsCode = pin;
+        });
       },
     );
   }
@@ -154,6 +165,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
       ),
       child: Center(
         child: TextFormField(
+          controller: phoneController,
           keyboardType: TextInputType.number,
           style: TextStyle(color: Colors.white),
           decoration: InputDecoration(
@@ -170,13 +182,15 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
             suffixIcon: InkWell(
               onTap: wait
                   ? null
-                  : () {
+                  : () async {
                       startTime();
                       setState(() {
                         start = 30;
                         wait = true;
                         buttonName = "Resend";
                       });
+                      await _authClass.verifyPhoneNumber(
+                          "+92 ${phoneController.text}", context, setData);
                     },
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 13, horizontal: 15),
@@ -193,5 +207,12 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
         ),
       ),
     );
+  }
+
+  void setData(String verificationID) {
+    setState(() {
+      verificationIDFinal = verificationID;
+    });
+    startTime();
   }
 }

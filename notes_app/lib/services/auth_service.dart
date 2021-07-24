@@ -69,4 +69,62 @@ class AuthClass {
       ScaffoldMessenger.of(context).showSnackBar(snackbar);
     }
   }
+
+  Future<void> verifyPhoneNumber(
+      String phoneNumber, BuildContext context, Function setData) async {
+    PhoneVerificationCompleted verificationCompleted =
+        (PhoneAuthCredential phoneAuthCredential) async {
+      showSnackBar(context, "Verification Completed");
+    };
+
+    PhoneVerificationFailed verificationFailed =
+        (FirebaseAuthException exception) async {
+      showSnackBar(context, exception.message.toString());
+    };
+    PhoneCodeSent codeSent =
+        (String verificationID, [int forceResendingToken]) {
+      showSnackBar(context, "Verification Code Sent on the phone number");
+      setData(verificationID);
+    };
+    PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
+        (String verificationID) {
+      showSnackBar(context, "Time out");
+    };
+
+    try {
+      await auth.verifyPhoneNumber(
+          phoneNumber: phoneNumber,
+          verificationCompleted: verificationCompleted,
+          verificationFailed: verificationFailed,
+          codeSent: codeSent,
+          codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
+    } catch (e) {
+      showSnackBar(context, e?.message.toString());
+    }
+  }
+
+  Future<void> signInWithPhoneNumber(
+      String verificationId, String smsCode, BuildContext context) async {
+    try {
+      AuthCredential credential = PhoneAuthProvider.credential(
+          verificationId: verificationId, smsCode: smsCode);
+
+      UserCredential userCredential =
+          await auth.signInWithCredential(credential);
+
+      storeTokenAndData(userCredential);
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (builder) => HomeScreen()),
+          (route) => false);
+      showSnackBar(context, "Logged In");
+    } catch (e) {
+      showSnackBar(context, e?.message.toString());
+    }
+  }
+
+  void showSnackBar(BuildContext context, String text) {
+    final snackbar = SnackBar(content: Text(text));
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+  }
 }
