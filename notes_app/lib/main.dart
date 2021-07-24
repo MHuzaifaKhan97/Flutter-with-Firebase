@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:notes_app/screens/addTodoScreen.dart';
 import 'package:notes_app/screens/home_screen.dart';
 import 'package:notes_app/screens/signin_screen.dart';
 import 'package:notes_app/screens/signup_screen.dart';
@@ -39,7 +40,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: currentPage,
+      home: AddTodoScreen(),
     );
   }
 }
