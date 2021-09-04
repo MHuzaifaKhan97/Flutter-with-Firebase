@@ -1,4 +1,4 @@
 # Flutter with Firebase
 
-### - NOTES APP 
+### - NOTES APP.
 
