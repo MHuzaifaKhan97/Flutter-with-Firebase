@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_todo/screen/add_todo_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -21,7 +22,8 @@ class TodoScreen extends StatelessWidget {
         actions: [
           TextButton(
               onPressed: () {
-                // Navigator.push(context, MaterialPageRoute(builder: (context)=> ))
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AddTodoScreen()));
               },
               child: Icon(
                 Icons.add_box_outlined,
@@ -75,14 +77,17 @@ class TodoScreen extends StatelessWidget {
                         if (res) {
                           deleteTodo(data['id'], context);
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text('${data['title']} dismissed')));
+                              backgroundColor: Colors.orange,
+                              content: Text('${data['title']} Deleted')));
                         }
                       },
                       background: Container(
-                        color: Colors.orange,
+                        color: Colors.red,
                       ),
                       key: ValueKey(data['id']),
-                      child: singleTodo(data['title'], data['desc']));
+                      child: Card(
+                          elevation: 3,
+                          child: singleTodo(data['title'], data['desc'])));
                 }).toList(),
               );
             },
