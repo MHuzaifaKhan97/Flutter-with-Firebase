@@ -26,8 +26,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
       _emailController.text = "";
       _passwordController.text = "";
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => HomeScreen()));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => HomeScreen(user.user?.uid)));
     } catch (err) {
       showDialog(
           context: context,
