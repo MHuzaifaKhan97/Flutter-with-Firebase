@@ -1,5 +1,5 @@
 # Flutter with Firebase
 
-### - TODO APP.
-### - POSTING APP.
+### - TODO APP
+### - POSTING APP
 
