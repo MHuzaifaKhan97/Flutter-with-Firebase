@@ -16,7 +16,13 @@ class SignIn extends StatelessWidget {
                 Text(
                   'Welcome!',
                   style: TextStyle(
-                    fontSize: Config.screenWidth! * 0.1,
+                      fontSize: Config.screenWidth! * 0.1,
+                      color: kPrimaryColor),
+                ),
+                Text(
+                  'Enter email and password to login...',
+                  style: TextStyle(
+                    fontSize: Config.screenWidth! * 0.04,
                   ),
                 )
               ],
