@@ -26,7 +26,9 @@ class MyApp extends StatelessWidget {
             title: 'Auth Firestore with Getx',
             debugShowCheckedModeBanner: false,
             theme: ThemeData(primaryColor: Colors.orange[400]),
-            home: snapshot.data != null ? HomeScreen() : LoginScreen(),
+            home: snapshot.data != null && snapshot.data!.emailVerified == true
+                ? HomeScreen()
+                : LoginScreen(),
           );
         }
         return LoadingWidget();
