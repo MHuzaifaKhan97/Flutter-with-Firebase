@@ -121,4 +121,29 @@ class AuthController extends GetxController {
   void logout() async {
     await auth.signOut();
   }
+
+  forgotPassword(String email) async {
+    if (email != null && GetUtils.isEmail(email)) {
+      try {
+        await auth.sendPasswordResetEmail(email: email);
+        Get.defaultDialog(
+            title: 'Forgot Password',
+            middleText: 'A change password email is sent to $email',
+            confirm: ElevatedButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child: Text('Okay')));
+      } catch (e) {}
+    } else if (!GetUtils.isEmail(email)) {
+      Get.defaultDialog(
+          title: 'Warning',
+          middleText: 'Email is bad formatted',
+          confirm: ElevatedButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: Text('Okay')));
+    }
+  }
 }

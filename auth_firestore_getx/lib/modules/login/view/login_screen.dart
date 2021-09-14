@@ -1,4 +1,5 @@
 import 'package:auth_firestore_getx/controllers/auth_controller.dart';
+import 'package:auth_firestore_getx/modules/forgot%20password/view/forgot_password_screen.dart';
 import 'package:auth_firestore_getx/modules/login/controller/login_controller.dart';
 import 'package:auth_firestore_getx/modules/signup/view/signup_screen.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,18 @@ class LoginScreen extends StatelessWidget {
                 obscureText: true,
                 decoration: InputDecoration(labelText: 'Enter Password'),
               ),
+              SizedBox(height: 8),
+              Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                      onPressed: () => Get.off(ForgotPasswordScreen()),
+                      child: Text(
+                        "Forgot Password",
+                        style: TextStyle(
+                          color: Colors.orange[400],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ))),
               SizedBox(height: 32),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
