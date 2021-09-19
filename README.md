@@ -1,4 +1,4 @@
-# Flutter with Firebase:
+# Flutter & Firebase:
 
 ### - TODO APP.
 ### - POSTING APP.
